@@ -1,18 +1,27 @@
 # by @blend-77
+# Inspired By @TokyoEdTech
 
 import turtle
 import time
 import random
+import json
 
 delay = 0.1
 
+# Getting Previously Stored High Scores
+m = open('scores.json', 'r')
+f = json.load(m)
+m.close()
+
 # Score
 score = 0
-high_score = 0
+high_score = f['high score']
+# Uncomment To Turn Off Score Memory
+# high_score = 0
 
 # Screen
 wn = turtle.Screen()
-wn.title("Simple Snake Game in Python")
+wn.title("Snake")
 wn.bgcolor("green")
 wn.setup(width=600, height=600)
 wn.tracer(0)
@@ -44,7 +53,7 @@ pen.color("white")
 pen.penup()
 pen.hideturtle()
 pen.goto(0, 260)
-pen.write("Score: 0  High Score: 0", align="center", font=("Courier", 24, "normal"))
+pen.write(f"Score: 0  High Score: {high_score}", align="center", font=("Courier", 24, "normal"))
 
 # Moving
 def go_up():
@@ -137,6 +146,13 @@ while True:
 
         if score > high_score:
             high_score = score
+            m = open('scores.json', 'r')
+            f = json.load(m)
+            m.close()
+            f['high score'] = high_score
+            m = open('scores.json', 'w')
+            json.dump(f, m, indent=4)
+            m.close()
 
         pen.clear()
         pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal"))
@@ -178,6 +194,7 @@ while True:
             # Update the score display
             pen.clear()
             pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal"))
+            score += 10
 
     time.sleep(delay)
 
